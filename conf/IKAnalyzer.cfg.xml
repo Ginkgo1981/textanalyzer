@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>
+        IK Analyzer Extension
+    </comment>
+    <entry key="ext_dict">
+        /mydict_en.dic;
+		/mydict_zh.dic;
+		/mydict20120913_zh.dic;
+		/mydict20120918_zh.dic;
+		/mydict20120920_zh.dic;
+		/mydict20121011_zh.dic;
+		/mydict20121207_zh.dic;
+		/mydict20121209_zh.dic;
+/sentiment9000_zh.dic;
+/wordbreaking_zh.dic;
+/vertical_zh.dic
+    </entry>
+    <!--entry key="ext_stopwords">
+    </entry-->
+</properties>

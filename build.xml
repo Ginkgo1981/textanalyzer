@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<project name="text-analyzer-simpledb" default="main" basedir=".">
+    <!-- Sets variables which can later be used. -->
+    <!--<property file="${basedir}/build.properties" />-->
+    <!-- The value of a property is accessed via ${} -->
+    <property name="src.dir" location="src" />
+	<property name="conf.dir" location="conf" />
+    <property name="build.dir" location="build" />
+    <property name="dist.dir" location="dist" />
+    <!--<property name="docs.dir" location="docs" />-->
+    <property name="lib.dir" location="lib" />
+    <property name="dist.name" value="text-analyzer" />
+    <!--property name="main-class" value="asia.wildfire.Semantic" /-->
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <!-- Deletes the existing build, docs and dist directory-->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <!--<delete dir="${docs.dir}" />-->
+        <delete dir="${dist.dir}" />
+    </target>
+
+    <!-- Creates the  build, docs and dist directory-->
+    <target name="makedir">
+        <mkdir dir="${build.dir}" />
+        <!--<mkdir dir="${docs.dir}" />-->
+        <mkdir dir="${dist.dir}" />
+    </target>
+
+    <!-- Compiles the java code (including the usage of library for JUnit -->
+    <target name="compile" depends="clean, makedir">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath">
+        </javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${conf.dir}">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+    </target>
+
+    <!-- Creates Javadoc -->
+    <!--<target name="docs" depends="compile">
+        <javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
+            <fileset dir="${src.dir}">
+                <include name="**" />
+            </fileset>
+        </javadoc>
+    </target>-->
+
+    <!--Creates the deployable jar file  -->
+    <target name="jar" depends="compile">
+        <jar destfile="${dist.dir}/${dist.name}.jar" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="asia.wildfire.Featurer" />
+            </manifest>
+        </jar>
+    </target>
+    
+    <target name="main" depends="compile, jar">
+        <description>Main target</description>
+    </target>
+	
+	<target name="ws" depends="jar">
+        <java fork="true" classname="asia.wildfire.Featurer">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${dist.dir}/${dist.name}.jar"/>
+            </classpath>
+        </java>
+    </target>
+	
+	<target name="test" depends="jar">
+        <java fork="true" classname="asia.wildfire.Test">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${dist.dir}/${dist.name}.jar"/>
+            </classpath>
+        </java>
+    </target>
+</project>

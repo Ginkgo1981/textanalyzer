@@ -17,9 +17,7 @@ import java.util.Map;
  * 
  */
 public class RedisUtils {
-	/**
-	 * 初始化Redis配置变量
-	 */
+
     private final static String REDIS_IP = "54.248.232.237";
     private final static Integer REDIS_PORT = 6379;
     private final static String REDIS_PASSWORD = "";
@@ -30,10 +28,7 @@ public class RedisUtils {
     }
 
 
-    /**
-	 * @Description: 向redis的key下添加一个list（顺序）
-	 * @param key
-	 */
+
 	public static void put(String key, List<String> list) {
 		Jedis jedis = initJedis();// new Jedis(config.getIp(), Integer.parseInt(config.getPort()));
 		String[] s = new String[list.size()];
@@ -44,13 +39,7 @@ public class RedisUtils {
 		jedis.disconnect();
 	}
 
-	/**
-	 * @description 向redis中添加一个string
-	 * @param key
-	 * @param value
-	 * @author：liuxiaochen
-	 * @date：2012-10-22
-	 */
+
 	public static void put(String key, String value) {
 		Jedis jedis = initJedis();
 		jedis.set(key, value);
@@ -58,13 +47,6 @@ public class RedisUtils {
 		jedis.disconnect();
 	}
 
-	/**
-	 * @Description: 根据key以及起始和结束位置返回一个list
-	 * @param key
-	 * @param start
-	 * @param end
-	 * @return
-	 */
 	public static List<String> getValue(String key, long start, long end) {
 		Jedis jedis = initJedis();
 
@@ -75,12 +57,7 @@ public class RedisUtils {
 		return list;
 	}
 
-	/**
-	 * 
-	 * @Description: 获得key的存活时间
-	 * @param key
-	 * @return
-	 */
+
 	public long getLiveTime(String key) {
 		Jedis jedis = initJedis();
 
@@ -92,11 +69,7 @@ public class RedisUtils {
 		return time;
 	}
 
-	/**
-	 * @Description: 给指定key设置存活时间（秒）
-	 * @param key
-	 * @param time
-	 */
+
 	public static void setLiveTime(String key, int time) {
 		Jedis jedis = initJedis();
 		jedis.expire(key, time);
@@ -104,10 +77,7 @@ public class RedisUtils {
 		jedis.disconnect();
 	}
 
-	/**
-	 * @Description: 删除指定key
-	 * @param key
-	 */
+
 	public static void delKey(String key) {
 		Jedis jedis = initJedis();
 		jedis.del(key);
@@ -122,11 +92,7 @@ public class RedisUtils {
 		return i;
 	}
 
-	/**
-	 * @Description: 向redis指定key下添加一个map
-	 * @param key
-	 * @param map
-	 */
+
 	public static void hmSet(String key, Map<String, String> map) {
 		Jedis jedis = initJedis();
 		jedis.hmset(key, map);
@@ -134,12 +100,7 @@ public class RedisUtils {
 		jedis.disconnect();
 	}
 
-	/**
-	 * @Description: 根据key和map的key获取map下对应key的value值
-	 * @param key
-	 * @param mapKey  netw:kid:domain
-	 * @return
-	 */
+
 	public static String hGet(String key, String mapKey) {
 		Jedis jedis = initJedis();
 
@@ -161,11 +122,7 @@ public class RedisUtils {
 		return str;
 	}
 
-	/**
-	 * @Description: 查看redis对应key是否存在
-	 * @param key
-	 * @return
-	 */
+
 	public static boolean keyExist(String key) {
 		Jedis jedis = initJedis();
 
@@ -176,11 +133,7 @@ public class RedisUtils {
 		return flag;
 	}
 
-	/**
-	 * @Description: 根据key获得list长度
-	 * @param key
-	 * @return
-	 */
+
 	public static long getKeyCount(String key) {
 		Jedis jedis = initJedis();
 
@@ -192,20 +145,14 @@ public class RedisUtils {
 		return length;
 	}
 
-	/**
-	 * 初始化Redis对象
-	 * @return
-	 */
+
 	public static NamespaceJedis initJedis(){
         Jedis js = new Jedis(REDIS_IP, REDIS_PORT, 60000);
         NamespaceJedis jedis = new NamespaceJedis("parameters", js);
 		return jedis;
 	}
 
-    /**
-     * 取得 tag_list
-     * @return
-     */
+
     public static List<String> getTagList() {
         List<String> tagList = Lists.newArrayList();
         tagList = jedis.lrange("tag_list", 0 , jedis.llen("tag_list"));
@@ -213,10 +160,7 @@ public class RedisUtils {
         return tagList;
     }
 
-    /**
-     * 从redis中取得 Likelihood
-     * @return
-     */
+
     public static Map<String, Map<String, Double>> getLikelihoodValueMap() {
         Map<String, Map<String, Double>> linkihoodMap = Maps.newHashMap();
         System.out.println("begin select Likelihood will waste some time");
@@ -250,10 +194,7 @@ public class RedisUtils {
         return linkihoodMap;
     }
 
-    /**
-     * 从redis中取得 Prior
-     * @return
-     */
+
     public static Map<String, Double> getPriorValueMap() {
         Map<String, Double> priorMap = Maps.newHashMap();
         String str = jedis.hget("parameters","prior");

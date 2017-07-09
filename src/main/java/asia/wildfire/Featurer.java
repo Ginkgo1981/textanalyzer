@@ -112,6 +112,7 @@ public class Featurer {
 
     private static void initFeatureMap(){
         File f= new File("./features-newest.txt");
+//        File f= new File("./features-chen.txt");
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = br.readLine();
@@ -130,20 +131,17 @@ public class Featurer {
         }
     }
 
-    /**
-     * 延迟加载初始化
-     */
-    private static void initRedisData() {
-        if (null == priorMap || priorMap.size() <= 0) {
-            priorMap = RedisUtils.getPriorValueMap();
-        }
-        if (null == linkihoodMap || linkihoodMap.size() <= 0) {
-            linkihoodMap = RedisUtils.getLikelihoodValueMap();
-        }
-        if (null == tagList || tagList.size() <= 0) {
-            tagList = RedisUtils.getTagList();
-        }
-    }
+//    private static void initRedisData() {
+//        if (null == priorMap || priorMap.size() <= 0) {
+//            priorMap = RedisUtils.getPriorValueMap();
+//        }
+//        if (null == linkihoodMap || linkihoodMap.size() <= 0) {
+//            linkihoodMap = RedisUtils.getLikelihoodValueMap();
+//        }
+//        if (null == tagList || tagList.size() <= 0) {
+//            tagList = RedisUtils.getTagList();
+//        }
+//    }
 
 //	private synchronized void initFeatureMap() {
 //		if (System.currentTimeMillis() - featureMapTimestamp < 1000 * 60 * 60 * 24) {
@@ -207,28 +205,28 @@ public class Featurer {
 //		}
 //	}
 
-    protected static String COUCHDB_FEATURE = "http://175.41.159.199:5985/features/";
-
-    protected String getRequest(String u) {
-        try {
-            URL url = new URL(u);
-            InputStream response = url.openStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    response));
-            StringBuffer jb = new StringBuffer();
-            for (String line; (line = reader.readLine()) != null;) {
-                jb.append(line);
-            }
-            reader.close();
-            return jb.toString();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-
-    }
+//    protected static String COUCHDB_FEATURE = "http://175.41.159.199:5985/features/";
+//
+//    protected String getRequest(String u) {
+//        try {
+//            URL url = new URL(u);
+//            InputStream response = url.openStream();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(
+//                    response));
+//            StringBuffer jb = new StringBuffer();
+//            for (String line; (line = reader.readLine()) != null;) {
+//                jb.append(line);
+//            }
+//            reader.close();
+//            return jb.toString();
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//
+//    }
 
     public String parser(List<String> str) {
         if (str == null || str.isEmpty() || "".equals(str.get(0))){
@@ -256,130 +254,126 @@ public class Featurer {
         return jArray.toString();
     }
 
-    public String doSegmentation(List<String> contents) {
-        System.out.println(System.currentTimeMillis());
-        System.out.println("do feature");
-        System.out.println(contents.size());
-        try {
-            StringBuffer returned = new StringBuffer("");
-            int count = contents.size();
-            for (String content : contents) {
-                HashMap<String, Integer> countMap = new HashMap<String, Integer>();
-                if (content == null || content.length() == 0){
-                    if (count > 1) {
-                        returned.append("|");
-                    }
-                    count--;
-                    continue;
-                }
-                try {
-                    JSONObject jo = new JSONObject(content);
-                    JSONArray jArray = new JSONArray(
-                            parser(Arrays.asList(jo.getString("body"))));
-                    for (int j = 0; j < jArray.length(); j++) {
-                        JSONObject jo_token = jArray.getJSONObject(j);
-                        if (jo_token == null)
-                            continue;
-                        String keyword = jo_token.getString("text");
-                        if (countMap.containsKey(keyword)) {
-                            countMap.put(keyword, countMap.get(keyword) + 1);
-                        } else {
-                            countMap.put(keyword, 1);
-                        }
-                    }
-                } catch (Exception e) {
-                    continue;
-                }
-                int j = 0;
-                for (Entry<String, Integer> entry : countMap.entrySet()) {
-                    if(j > 0){
-                        returned.append(",");
-                    }
-                    returned.append(entry.getKey());
-                    returned.append("=");
-                    returned.append(entry.getValue());
-                    j++;
-                }
-                if (count > 1) {
-                    returned.append("|");
-                }
-                count--;
-            }
-
-            System.out.println(returned.toString());
-            return returned.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
+//    public String doSegmentation(List<String> contents) {
+//        System.out.println(System.currentTimeMillis());
+//        System.out.println("do feature");
+//        System.out.println(contents.size());
+//        try {
+//            StringBuffer returned = new StringBuffer("");
+//            int count = contents.size();
+//            for (String content : contents) {
+//                HashMap<String, Integer> countMap = new HashMap<String, Integer>();
+//                if (content == null || content.length() == 0){
+//                    if (count > 1) {
+//                        returned.append("|");
+//                    }
+//                    count--;
+//                    continue;
+//                }
+//                try {
+//                    JSONObject jo = new JSONObject(content);
+//                    JSONArray jArray = new JSONArray(
+//                            parser(Arrays.asList(jo.getString("body"))));
+//                    for (int j = 0; j < jArray.length(); j++) {
+//                        JSONObject jo_token = jArray.getJSONObject(j);
+//                        if (jo_token == null)
+//                            continue;
+//                        String keyword = jo_token.getString("text");
+//                        if (countMap.containsKey(keyword)) {
+//                            countMap.put(keyword, countMap.get(keyword) + 1);
+//                        } else {
+//                            countMap.put(keyword, 1);
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    continue;
+//                }
+//                int j = 0;
+//                for (Entry<String, Integer> entry : countMap.entrySet()) {
+//                    if(j > 0){
+//                        returned.append(",");
+//                    }
+//                    returned.append(entry.getKey());
+//                    returned.append("=");
+//                    returned.append(entry.getValue());
+//                    j++;
+//                }
+//                if (count > 1) {
+//                    returned.append("|");
+//                }
+//                count--;
+//            }
+//
+//            System.out.println(returned.toString());
+//            return returned.toString();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return "";
+//    }
 
     /**
      * move sentiment analytis to text analut
      *
      */
-    public static Map<String,Double> predictedTag(Map<String, Integer> featureMap) {
-        //初始化redis数据
-        initRedisData();
+//    public static Map<String,Double> predictedTag(Map<String, Integer> featureMap) {
+//        initRedisData();
+//
+//        Map<String,Double> resultMap = Maps.newHashMap();
+//        Map<String, Double> predictedMap = new HashMap<String, Double>();
+//        Set<String> featureSet = featureMap.keySet();
+//        for (String tag : tagList) {
+//            predictedMap.put(tag, priorMap.get(tag) == null ? 0 : priorMap.get(tag));
+//            for (String feature : featureSet) {
+//                double p_dou = predictedMap.get(tag);
+//                if (linkihoodMap.get(tag) != null) {
+//                    Double link_dou = linkihoodMap.get(tag).get(feature);
+//                    if (null == linkihoodMap.get(tag).get(feature)) {
+//                        link_dou = Double.valueOf(0);
+//                    }
+//                    p_dou += link_dou * (1 + Math.log(featureMap.get(feature)));
+//                }
+//                predictedMap.put(tag, p_dou);
+//            }
+//
+//            Double prediceteTag = Double.valueOf(0);
+//            prediceteTag = RedisUtils.toDecimal4(1 / (1 + Math.exp(0 - predictedMap.get(tag))));
+//            if (prediceteTag > 0.55) {
+//                resultMap.put(tag, prediceteTag);
+//            }
+//        }
+//        return resultMap;
+//    }
 
-        //最终返回结果
-        Map<String,Double> resultMap = Maps.newHashMap();
-        Map<String, Double> predictedMap = new HashMap<String, Double>();
-        Set<String> featureSet = featureMap.keySet();
-        for (String tag : tagList) {
-            predictedMap.put(tag, priorMap.get(tag) == null ? 0 : priorMap.get(tag));
-            // 循环feature
-            for (String feature : featureSet) {
-                double p_dou = predictedMap.get(tag);
-                if (linkihoodMap.get(tag) != null) {
-                    Double link_dou = linkihoodMap.get(tag).get(feature);
-                    if (null == linkihoodMap.get(tag).get(feature)) {
-                        link_dou = Double.valueOf(0);
-                    }
-                    p_dou += link_dou * (1 + Math.log(featureMap.get(feature)));
-                }
-                predictedMap.put(tag, p_dou);
-            }
-
-            Double prediceteTag = Double.valueOf(0);
-            prediceteTag = RedisUtils.toDecimal4(1 / (1 + Math.exp(0 - predictedMap.get(tag))));
-            if (prediceteTag > 0.55) {
-                resultMap.put(tag, prediceteTag);
-            }
-        }
-        return resultMap;
-    }
-
-    /**
-     * 根据分词得到的内容, 取得各个分词,及其对应的出现的次数
-     * @param resultContent
-     * @return
-     */
-    public static Map<String, Integer> getFeatureMapFromContent(String resultContent) {
-        Map<String, Integer> resultMap = Maps.newHashMap();
-        String[] spliterStr = resultContent.split("\\|");
-
-        for (String str : spliterStr) {
-            String[] strSplit = str.split("\\,");
-            for (String str2 : strSplit) {
-                String[] str2Split = str2.split("\\=");
-                if (str2Split.length != 2) {
-                    continue;
-                } else {
-                    if (resultMap.containsKey(str2Split[0])) {
-                        resultMap.put(str2Split[0], (resultMap.get(str2Split[0]) + Integer.parseInt(str2Split[1])));
-                    } else {
-                        resultMap.put(str2Split[0], Integer.parseInt(str2Split[1]));
-                    }
-                }
-            }
-        }
-        return resultMap;
-
-    }
+//    public static Map<String, Integer> getFeatureMapFromContent(String resultContent) {
+//        Map<String, Integer> resultMap = Maps.newHashMap();
+//        String[] spliterStr = resultContent.split("\\|");
+//
+//        for (String str : spliterStr) {
+//            String[] strSplit = str.split("\\,");
+//            for (String str2 : strSplit) {
+//                String[] str2Split = str2.split("\\=");
+//                if (str2Split.length != 2) {
+//                    continue;
+//                } else {
+//                    if (resultMap.containsKey(str2Split[0])) {
+//                        resultMap.put(str2Split[0], (resultMap.get(str2Split[0]) + Integer.parseInt(str2Split[1])));
+//                    } else {
+//                        resultMap.put(str2Split[0], Integer.parseInt(str2Split[1]));
+//                    }
+//                }
+//            }
+//        }
+//        return resultMap;
+//
+//    }
 
     public static void main(String[] args) {
-    	String url = "http://localhost:8081/AxisWS/asia.wildfire.Featurer";
+
+        System.out.println("==== main =====");
+
+
+    	String url = "http://localhost:8082/AxisWS/asia.wildfire.Featurer";
 		Endpoint.publish(url, new Featurer());
 		Featurer.initFeatureMap();
     }
